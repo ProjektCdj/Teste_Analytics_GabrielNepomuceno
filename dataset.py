@@ -120,7 +120,6 @@ if __name__ == "__main__":
     # Calcula o total de vendas por produto e imprime
 		total_vendas_produto = df_clean.groupby('Produto')['TotalVenda'].sum().sort_values(ascending=False)
 		print("\nTotal de vendas por produto (usando data_clean.csv):")
-		print(total_vendas_produto)
 		produto_mais_vendas = total_vendas_produto.idxmax()
 		valor_mais_vendas = total_vendas_produto.max()
 		print(f"\nProduto com maior total de vendas: {produto_mais_vendas} (R$ {valor_mais_vendas:.2f})")
