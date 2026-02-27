@@ -43,51 +43,77 @@ def gerar_preco(produto):
 
 # Simulação dos dados
 def simular_dados():
-	dados = []
-	for i in range(1, num_registros + 1):
-		produto, categoria = random.choice(produtos)
-		quantidade = random.randint(1, 10)
-		preco = gerar_preco(produto)
-		data = gerar_data().strftime('%d/%m/%Y')
-		dados.append({
-			"ID": i,
-			"Data": data,
-			"Produto": produto,
-			"Categoria": categoria,
-			"Quantidade": quantidade,
-			"Preço": preco
-		})
-	return pd.DataFrame(dados)
+    dados = []
+    for i in range(1, num_registros + 1):
+        produto, categoria = produtos[i % len(produtos)]
+        quantidade = (i % 10) + 1
+        preco = gerar_preco(produto)
+        data = gerar_data(i).strftime('%d/%m/%Y')
+
+        dados.append({
+            "ID": i,
+            "Data": data,
+            "Produto": produto,
+            "Categoria": categoria,
+            "Quantidade": quantidade,
+            "Preço": preco
+        })
+    return pd.DataFrame(dados)
 
 # ----------------------
 # LIMPEZA DE DADOS
 # ----------------------
 def limpar_dados(df):
-# Preencher valores faltantes com aleatórios compatíveis
-	if df.isnull().values.any():
-		produtos_list = [p[0] for p in produtos]
-		categorias_dict = dict(produtos)
-		if df['Produto'].isnull().any():
-			df['Produto'] = df['Produto'].apply(lambda x: random.choice(produtos_list) if pd.isnull(x) else x)
-		if df['Categoria'].isnull().any():
-			df['Categoria'] = df.apply(lambda row: categorias_dict.get(row['Produto'], random.choice([p[1] for p in produtos])) if pd.isnull(row['Categoria']) else row['Categoria'], axis=1)
-		if df['Quantidade'].isnull().any():
-			df['Quantidade'] = df['Quantidade'].apply(lambda x: random.randint(1, 10) if pd.isnull(x) else x)
-		if df['Preço'].isnull().any():
-			df['Preço'] = df.apply(lambda row: gerar_preco(row['Produto']) if pd.isnull(row['Preço']) else row['Preço'], axis=1)
-		if df['Data'].isnull().any():
-			df['Data'] = df['Data'].apply(lambda x: gerar_data().strftime('%d/%m/%Y') if pd.isnull(x) else x)
-		if df['ID'].isnull().any():
-			max_id = df['ID'].max() if not df['ID'].isnull().all() else 0
-			novos_ids = list(range(max_id + 1, max_id + 1 + df['ID'].isnull().sum()))
-			df.loc[df['ID'].isnull(), 'ID'] = novos_ids
+    if df.isnull().values.any():
+        produtos_list = [p[0] for p in produtos]
+        categorias_dict = dict(produtos)
+
+        # Produto faltante → usa o primeiro produto da lista (determinístico)
+        if df['Produto'].isnull().any():
+            produto_padrao = produtos_list[0]
+            df['Produto'] = df['Produto'].fillna(produto_padrao)
+
+        # Categoria faltante → baseada no produto
+        if df['Categoria'].isnull().any():
+            df['Categoria'] = df.apply(
+                lambda row: categorias_dict.get(row['Produto'], "Outros")
+                if pd.isnull(row['Categoria']) else row['Categoria'],
+                axis=1
+            )
+
+        # Quantidade faltante → usa mediana (melhor que aleatório)
+        if df['Quantidade'].isnull().any():
+            quantidade_padrao = int(df['Quantidade'].median()) if df['Quantidade'].notnull().any() else 1
+            df['Quantidade'] = df['Quantidade'].fillna(quantidade_padrao)
+
+        # Preço faltante → preço médio por produto
+        if df['Preço'].isnull().any():
+            preco_medio = df.groupby('Produto')['Preço'].transform('mean')
+            df['Preço'] = df['Preço'].fillna(preco_medio)
+            df['Preço'] = df['Preço'].fillna(df['Preço'].mean())
+
+        # Data faltante → sequência baseada no índice (sem random)
+        if df['Data'].isnull().any():
+            df['Data'] = df['Data'].fillna(
+                pd.Series([
+                    (datetime(2023, 1, 1) + timedelta(days=i)).strftime('%d/%m/%Y')
+                    for i in range(len(df))
+                ])
+            )
+
+        # ID faltante → sequência lógica (igual ao seu)
+        if df['ID'].isnull().any():
+            max_id = int(df['ID'].max()) if not df['ID'].isnull().all() else 0
+            novos_ids = list(range(max_id + 1, max_id + 1 + df['ID'].isnull().sum()))
+            df.loc[df['ID'].isnull(), 'ID'] = novos_ids
+
 	
  	# Remover duplicatas
-	df = df.drop_duplicates()
-	
- 	# Conversão de tipos
-	df['ID'] = df['ID'].astype(int)
-	df['Quantidade'] = df['Quantidade'].astype(int)
-	df['Preço'] = df['Preço'].astype(float)
-	df['Data'] = pd.to_datetime(df['Data'], format='%d/%m/%Y')
-	return df
+    df = df.drop_duplicates()
+
+	 	# Conversão de tipos
+    df['ID'] = df['ID'].astype(int)
+    df['Quantidade'] = df['Quantidade'].astype(int)
+    df['Preço'] = df['Preço'].astype(float)
+    df['Data'] = pd.to_datetime(df['Data'], format='%d/%m/%Y')
+    return df

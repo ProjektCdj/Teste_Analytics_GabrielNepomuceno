@@ -1,9 +1,10 @@
 from dataset import simular_dados, limpar_dados
 import os
 import pandas as pd
+from graficos_mensais import plt
 
 # ----------------------
-# EXECUÇÃO PRINCIPAL
+# EXECUÇÃO PRINCIPAL3
 # ----------------------
 if __name__ == "__main__":
 # Simulação e limpeza
@@ -45,4 +46,6 @@ total_vendas_produto = calcular_total_vendas_produto(df_clean)
 print(f"\nTotal de vendas por produto:\n{total_vendas_produto}\n")
 produto_mais_vendas = total_vendas_produto.idxmax()
 valor_mais_vendas = total_vendas_produto.max()
-print(f"\nProduto com maior total de vendas: {produto_mais_vendas} (R$ {valor_mais_vendas:.2f})")
+
+#Mostra o Grafico
+plt.show()
