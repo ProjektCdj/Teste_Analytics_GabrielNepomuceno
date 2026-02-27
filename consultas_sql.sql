@@ -26,25 +26,27 @@ ORDER BY
     TotalVendas DESC;
 
 -- =====================================================
--- CONSULTA 2: Produtos que venderam menos em Junho/2024
+-- CONSULTA 2: Produtos que venderam menos em Junho/2023
 -- =====================================================
 /*
 EXPLICAÇÃO DA LÓGICA:
-- SELECT DISTINCT: Obtém todos os produtos únicos da tabela
-- 0 AS VendasJunho2024: Atribui valor zero para vendas em junho/2024
-- ORDER BY Produto: Organiza os resultados em ordem alfabética
+- WHERE Data LIKE '2023-06%': Filtra apenas as vendas do mês de junho de 2023
+- GROUP BY Produto, Categoria: Agrupa por produto
+- SUM(Quantidade * Preço): Calcula o total vendido em junho/2023
+- ORDER BY VendasJunho2023 ASC: Ordena do menor para o maior (piores primeiro)
 
-OBSERVAÇÃO IMPORTANTE: Os dados disponíveis são apenas do ano de 2023.
-Portanto, para junho de 2024, todos os produtos apresentam ZERO vendas.
-Esta consulta reflete exatamente essa realidade - nenhum produto vendeu
-em junho/2024 por falta de dados no período.
+Esta consulta mostra quais produtos tiveram pior desempenho no mês de junho/2023.
 */
 
 SELECT 
-    DISTINCT Produto,
+    Produto,
     Categoria,
-    0 AS VendasJunho2024
+    SUM(Quantidade * Preço) AS VendasJunho2023
 FROM 
     vendas
+WHERE 
+    Data LIKE '2023-06%'
+GROUP BY 
+    Produto, Categoria
 ORDER BY 
-    Produto;
+    VendasJunho2023 ASC;
