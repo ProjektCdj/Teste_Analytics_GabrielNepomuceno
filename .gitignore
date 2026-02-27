@@ -1,3 +1,60 @@
-.venv
-__pycache__
+# Banco de dados SQLite
+*.db
+*.sqlite
+*.sqlite3
+vendas.db
+
+# Arquivos CSV gerados
+*.csv
 data_clean.csv
+resultado_consulta1.csv
+resultado_consulta2.csv
+
+# Arquivo Excel
+resultado_completo.xlsx
+
+
+# Cache do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ambiente virtual
+venv/
+env/
+.env
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter Notebook (se houver)
+.ipynb_checkpoints/
+*.ipynb
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Arquivos de log
+*.log
+logs/
+
+# Arquivos temporários
+tmp/
+temp/
+*.tmp
+*.temp
