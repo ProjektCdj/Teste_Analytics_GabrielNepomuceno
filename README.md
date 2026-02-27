@@ -5,6 +5,7 @@ Este projeto consiste em um sistema completo para simulação, limpeza, armazena
 
 ## Estrutura do Repositório
 
+/
 ├── datamain.py # Script principal - orquestra toda a execução
 ├── simulacao.py # Geração e limpeza dos dados simulados
 ├── graficos_mensais.py # Geração dos gráficos de análise
@@ -12,11 +13,13 @@ Este projeto consiste em um sistema completo para simulação, limpeza, armazena
 ├── consultas_sql.sql # Consultas SQL com explicações
 ├── relatorio_insights.md # Relatório final com insights e recomendações
 ├── README.md # Este arquivo - documentação do projeto
-├── data_clean.csv # Dados limpos gerados (criado na execução)
-├── vendas.db # Banco de dados SQLite (criado na execução)
-├── resultado_consulta1.csv # Resultado da Consulta 1 (criado na execução)
-├── resultado_consulta2.csv # Resultado da Consulta 2 (criado na execução)
-└── resultado_completo.xlsx # Excel com todas as abas e gráficos (criado na execução)
+│
+├── Arquivos gerados na execução:
+├── data_clean.csv # Dados limpos gerados
+├── vendas.db # Banco de dados SQLite
+├── resultado_consulta1.csv # Resultado da Consulta 1
+├── resultado_consulta2.csv # Resultado da Consulta 2
+└── resultado_completo.xlsx # Excel com todas as abas e gráficos
 
 
 ## Dependências Necessárias
