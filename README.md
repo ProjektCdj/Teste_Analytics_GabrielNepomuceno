@@ -5,7 +5,7 @@ Este projeto consiste em um sistema completo para simulação, limpeza, armazena
 
 ## Estrutura do Repositório
 
-/
+```
 ├── datamain.py # Script principal - orquestra toda a execução
 ├── simulacao.py # Geração e limpeza dos dados simulados
 ├── graficos_mensais.py # Geração dos gráficos de análise
@@ -20,6 +20,7 @@ Este projeto consiste em um sistema completo para simulação, limpeza, armazena
 ├── resultado_consulta1.csv # Resultado da Consulta 1
 ├── resultado_consulta2.csv # Resultado da Consulta 2
 └── resultado_completo.xlsx # Excel com todas as abas e gráficos
+```
 
 
 ## Dependências Necessárias
