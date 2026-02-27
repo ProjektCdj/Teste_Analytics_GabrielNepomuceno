@@ -1,12 +1,6 @@
-# --- Análise usando o arquivo data_clean.csv ---
-
-# ----------------------
-# SIMULAÇÃO DE DADOS
-# ----------------------
+from datetime import datetime, timedelta
 import random
 import pandas as pd
-from datetime import datetime, timedelta
-import os
 
 # Parâmetros e listas de produtos
 num_registros = 60
@@ -87,39 +81,13 @@ def limpar_dados(df):
 			max_id = df['ID'].max() if not df['ID'].isnull().all() else 0
 			novos_ids = list(range(max_id + 1, max_id + 1 + df['ID'].isnull().sum()))
 			df.loc[df['ID'].isnull(), 'ID'] = novos_ids
-# Remover duplicatas
+	
+ 	# Remover duplicatas
 	df = df.drop_duplicates()
-# Conversão de tipos
+	
+ 	# Conversão de tipos
 	df['ID'] = df['ID'].astype(int)
 	df['Quantidade'] = df['Quantidade'].astype(int)
 	df['Preço'] = df['Preço'].astype(float)
 	df['Data'] = pd.to_datetime(df['Data'], format='%d/%m/%Y')
 	return df
-
-# ----------------------
-# EXECUÇÃO PRINCIPAL
-# ----------------------
-if __name__ == "__main__":
-# Simulação e limpeza
-	df = simular_dados()
-	df = limpar_dados(df)
-	print(df)
-	df.to_csv("data_clean.csv", index=False, sep=';')
-
-# --- Análise usando o arquivo data_clean.csv ---
-	if os.path.exists("data_clean.csv"):
-		df_clean = pd.read_csv("data_clean.csv", sep=';')
-	# Garante que as colunas estejam no tipo correto
-		df_clean['Quantidade'] = df_clean['Quantidade'].astype(int)
-		df_clean['Preço'] = df_clean['Preço'].astype(float)
-		
-    # Cria a coluna TotalVenda se não existir
-		if 'TotalVenda' not in df_clean.columns:
-			df_clean['TotalVenda'] = df_clean['Quantidade'] * df_clean['Preço']
-		
-    # Calcula o total de vendas por produto e imprime
-		total_vendas_produto = df_clean.groupby('Produto')['TotalVenda'].sum().sort_values(ascending=False)
-		print("\nTotal de vendas por produto (usando data_clean.csv):")
-		produto_mais_vendas = total_vendas_produto.idxmax()
-		valor_mais_vendas = total_vendas_produto.max()
-		print(f"\nProduto com maior total de vendas: {produto_mais_vendas} (R$ {valor_mais_vendas:.2f})")
